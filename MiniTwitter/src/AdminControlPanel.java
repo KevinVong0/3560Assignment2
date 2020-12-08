@@ -22,8 +22,8 @@ public class AdminControlPanel extends JFrame {
 	private JPanel contentPane;
 	private static AdminControlPanel pointer; //for singleton
 	
-	private List<UserGroup> groups;
-	private ArrayList<String> groupIDs;
+	private ArrayList<UserGroup> groups; ///list of groups
+	private ArrayList<String> groupIDs; //list of groupIDs
 	private ArrayList<User> users; //list of users
 	private ArrayList<String> userIDs; //list of userIDs
 
@@ -62,14 +62,14 @@ public class AdminControlPanel extends JFrame {
 		tree = new JTree(rootModel);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 761, 481);
+		setBounds(100, 100, 761, 546);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JScrollPane treeView = new JScrollPane(tree);
-		treeView.setBounds(12, 13, 324, 406);
+		treeView.setBounds(12, 13, 324, 476);
 		contentPane.add(treeView);
 		
 		JTextArea userTextArea = new JTextArea();
@@ -94,13 +94,16 @@ public class AdminControlPanel extends JFrame {
             	 if (userTextArea.getText().equals("")) {
                      JOptionPane.showMessageDialog(null, "Please type a username.", "Add User Error", JOptionPane.INFORMATION_MESSAGE);
                  }
+            	 //space check
+            	 if (userTextArea.getText().contains(" ")){
+            		 JOptionPane.showMessageDialog(null, "No spaces are allowed for usernames.", "Add User Error", JOptionPane.INFORMATION_MESSAGE);
+            	 }
             	 else {
                      if (!userIDs.contains(userTextArea.getText())) {
                          if (tree.getSelectionPath() == null) {
-                             long start = System.currentTimeMillis();
                              User user = new User(userTextArea.getText());
-                             long stop = System.currentTimeMillis();
-                             creationTime = stop - start;
+                             creationTime = System.currentTimeMillis();
+                             user.setCreationTime(creationTime);
                              
                              DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                              users.add(user);
@@ -111,10 +114,9 @@ public class AdminControlPanel extends JFrame {
                          else {
                              DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                              if (selectedElement == root) {
-                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
-                                 long stop = System.currentTimeMillis();
-                                 creationTime = stop - start;
+                                 creationTime = System.currentTimeMillis();
+                                 user.setCreationTime(creationTime);
                                  
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  users.add(user);
@@ -123,10 +125,9 @@ public class AdminControlPanel extends JFrame {
                                  root.add(userNode);
                              }
                              if (selectedElement.getUserObject() instanceof UserGroup) {
-                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
-                                 long stop = System.currentTimeMillis();
-                                 creationTime = stop - start;
+                                 creationTime = System.currentTimeMillis();
+                                 user.setCreationTime(creationTime);
                                  
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  users.add(user);
@@ -135,10 +136,9 @@ public class AdminControlPanel extends JFrame {
                                  selectedElement.add(userNode);
                              }
                              if (selectedElement.getUserObject() instanceof User) {
-                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
-                                 long stop = System.currentTimeMillis();
-                                 creationTime = stop - start;
+                                 creationTime = System.currentTimeMillis();
+                                 user.setCreationTime(creationTime);
                                  
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedElement.getParent();
@@ -170,14 +170,16 @@ public class AdminControlPanel extends JFrame {
             public void actionPerformed(ActionEvent evt) {
                 if (groupTextArea.getText().equals("")) {
                     JOptionPane.showMessageDialog(null, "Please type a group to add.", "Add Group Error", JOptionPane.INFORMATION_MESSAGE);
-                } 
+                }
+                //space check
+           	 	if (groupTextArea.getText().contains(" ")){
+           		 JOptionPane.showMessageDialog(null, "No spaces are allowed for groups.", "Add Group Error", JOptionPane.INFORMATION_MESSAGE);
+           	 	}
                 else {
                     if (!groupIDs.contains(groupTextArea.getText())) {
                         if (tree.getSelectionPath() == null) {
-                            long start = System.currentTimeMillis();
                             UserGroup group = new UserGroup(groupTextArea.getText());
-                            long stop = System.currentTimeMillis();
-                            creationTime = stop - start;
+                            creationTime = System.currentTimeMillis();
                             
                             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                             groups.add(group);
@@ -187,20 +189,16 @@ public class AdminControlPanel extends JFrame {
                         else {
                             DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                             if (selectedElement == root) {
-                                long start = System.currentTimeMillis();
                                 UserGroup group = new UserGroup(groupTextArea.getText());
-                                long stop = System.currentTimeMillis();
-                                creationTime = stop - start;
+                                creationTime = System.currentTimeMillis();
                                 
                                 DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                                 groups.add(group);
                                 groupIDs.add(groupTextArea.getText());
                                 root.add(groupNode);
                             } else if (groupIDs.contains(selectedElement.getUserObject().toString())) {
-                                long start = System.currentTimeMillis();
                                 UserGroup group = new UserGroup(groupTextArea.getText());
-                                long stop = System.currentTimeMillis();
-                                creationTime = stop - start;
+                                creationTime = System.currentTimeMillis();
                                 
                                 DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                                 groups.add(group);
@@ -297,6 +295,82 @@ public class AdminControlPanel extends JFrame {
             }
         });
 		contentPane.add(posPercentageButton);
+		
+		JButton IDverification = new JButton();
+		IDverification.setText("Verify IDs");
+		IDverification.setBounds(348, 432, 184, 57);
+		IDverification.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				// check if there are IDs first
+                if(users.size() == 0 && groups.size()-1 == 0) {
+    				JOptionPane.showMessageDialog(null, "There are no IDs!", "ID Verification Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                	boolean unique = false;
+                	//check if groupIDs have any userIDs
+                	for (String u : userIDs) {
+                		if(groupIDs.contains(u)) {
+                			unique = false;
+                		}
+        				else {
+        					unique = true;
+        				}
+                	}
+                	//check if userIDs have any groupIDs
+                   	for (String g : groupIDs) {
+                		if(userIDs.contains(g)) {
+                			unique = false;
+                		}
+        				else {
+        					unique = true;
+        				}
+                	}
+                   if (unique) {
+                	   JOptionPane.showMessageDialog(null, "All IDs are unique!", "ID Verification", JOptionPane.INFORMATION_MESSAGE);
+                   }
+                   else {
+                	   JOptionPane.showMessageDialog(null, "There is an invalid ID!", "ID Verification Error", JOptionPane.INFORMATION_MESSAGE);
+                   }
+                	
+                }
+				
+			}
+		});
+		contentPane.add(IDverification);
+		
+		JButton lastUpdatedUser = new JButton();
+		lastUpdatedUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//check for any users
+				if (users.size() == 0) {
+					JOptionPane.showMessageDialog(null, "No users have updated.", "Last Updated User Error", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else {
+					//check for any messages
+					int msgCounter = 0;
+					for (User u : users) {
+						msgCounter = msgCounter + u.getMsgs().size();
+					}
+					if (msgCounter == 0) {
+						JOptionPane.showMessageDialog(null, "No users have updated.", "Last Updated User Error", JOptionPane.INFORMATION_MESSAGE);
+					}
+					else {
+						long latestUpdate = users.get(0).getLastUpdateTime();
+						String lastUpdatedUser = users.get(0).getID();
+						for (User v : users) {
+							if(v.getLastUpdateTime() > latestUpdate) {
+								latestUpdate = v.getLastUpdateTime();
+								lastUpdatedUser = v.getID();
+							}
+						}
+						JOptionPane.showMessageDialog(null, "Last update was from: " + lastUpdatedUser, "Last Updated User", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+			}
+		});
+		lastUpdatedUser.setText("Show Last Updated User");
+		lastUpdatedUser.setBounds(547, 432, 184, 55);
+		contentPane.add(lastUpdatedUser);
 	}
 	
     private void expandAllNodes(JTree tree, int startingIndex, int rowCount) {

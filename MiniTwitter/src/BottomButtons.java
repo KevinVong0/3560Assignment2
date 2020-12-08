@@ -3,6 +3,7 @@ public class BottomButtons implements Buttons {
 
 	Buttons[] buttons;
 
+	
 	public BottomButtons() {
 		buttons = new Buttons[] { new TotalMsgsButton(), new TotalUsersButton(), new TotalGroupsButton(), new TotalPositivePercentButton()};
 	}

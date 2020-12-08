@@ -1,11 +1,13 @@
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -18,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
 
 public class UserView extends JFrame{
 	
@@ -53,7 +56,7 @@ public class UserView extends JFrame{
 		newsfeedModel.addElement("Feed: ");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 439, 509);
+		setBounds(100, 100, 439, 554);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -105,6 +108,19 @@ public class UserView extends JFrame{
 		tweetText.setBounds(33, 244, 253, 83);
 		contentPane.add(tweetText);
 		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+		Date d = new Date(user.getCreationTime());
+		String creationTime = dateFormat.format(d);
+		
+		JLabel creationLabel = new JLabel("Creation Time: " + creationTime);
+		creationLabel.setBounds(33, 462, 159, 32);
+		contentPane.add(creationLabel);
+		
+		JLabel lastUpdateLabel = new JLabel("Last Update was at: " + user.getLastUpdateTime());
+		lastUpdateLabel.setBounds(204, 462, 191, 32);
+		contentPane.add(lastUpdateLabel);
+		
+		
 		JButton button = new JButton("Tweet");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -112,11 +128,10 @@ public class UserView extends JFrame{
 		            JOptionPane.showMessageDialog(null, "No blank tweets.", "Tweet Error", JOptionPane.INFORMATION_MESSAGE);
 		        } 
 				else {
-                    long start = System.currentTimeMillis();
 		            user.tweet(tweetText.getText());
-                    long stop = System.currentTimeMillis();
-                    lastUpdateTime = start - stop;
-                    user.setLastUpdateTime(lastUpdateTime);
+                    long currentTime = System.currentTimeMillis();
+                    lastUpdateTime = currentTime;
+                    user.setLastUpdateTime(currentTime);
 		            newsfeedModel.insertElementAt(user.getNewsFeed().get(0), 1);
 		            newsFeedList.setModel(newsfeedModel);
 		            
@@ -139,6 +154,11 @@ public class UserView extends JFrame{
 		            tweetText.setText("");
 		            revalidate();
 		            repaint();
+		          
+		    		Date date = new Date(user.getLastUpdateTime());
+		    		String updateTime = dateFormat.format(date);
+		    		lastUpdateLabel.setText("Last update was at: " + updateTime);
+		            
 		        }
 			}		
 		});
@@ -150,6 +170,7 @@ public class UserView extends JFrame{
 		scrollPane2.setBounds(33, 336, 362, 113);
 		scrollPane2.setViewportView(newsFeedList);
 		contentPane.add(scrollPane2);
+		
 	
 	}
 }

@@ -4,7 +4,9 @@ import java.util.List;
 
 public class User extends Subject implements Composite, Observer {
 
+	private String lastUpdatedUser;
 	private long lastUpdateTime = 0;
+	private long creationTime = 0;
 	
 	private String id;
 	private List<User> followers;
@@ -16,6 +18,7 @@ public class User extends Subject implements Composite, Observer {
 	private String tweet;
 	private String[] positiveWords =  {"nice", "good", "cool", "dope"};
 	private int positiveCounter = 0;
+
 	
 	public User(String id) {
 		this.id = id;
@@ -36,6 +39,7 @@ public class User extends Subject implements Composite, Observer {
 		this.tweet = tweet;
 		notifyObservers(tweet);
 		newsFeedList.add(0, id + ": " + tweet);
+		lastUpdatedUser = id;
         for (String word : positiveWords) {
             if (tweet.toLowerCase().contains(word)) {
             	positiveCounter++;
@@ -50,6 +54,7 @@ public class User extends Subject implements Composite, Observer {
 
 	@Override //observer
 	public void update(Subject subject) {
+		lastUpdatedUser = id;
         if (subject instanceof User) {
             newsFeedList.add("[" + ((User)subject).getID() + "] - " + tweet);
         }
@@ -90,6 +95,14 @@ public class User extends Subject implements Composite, Observer {
 	@Override
 	public String toString() {
 		return id;
+	}
+	
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
+	}
+	
+	public long getCreationTime() {
+		return creationTime;
 	}
 	
 	public void setLastUpdateTime(long lastUpdateTime) {
