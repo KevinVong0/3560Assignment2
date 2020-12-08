@@ -16,7 +16,9 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class AdminControlPanel extends JFrame {
-
+	
+	private long creationTime;
+	
 	private JPanel contentPane;
 	private static AdminControlPanel pointer; //for singleton
 	
@@ -95,7 +97,11 @@ public class AdminControlPanel extends JFrame {
             	 else {
                      if (!userIDs.contains(userTextArea.getText())) {
                          if (tree.getSelectionPath() == null) {
+                             long start = System.currentTimeMillis();
                              User user = new User(userTextArea.getText());
+                             long stop = System.currentTimeMillis();
+                             creationTime = stop - start;
+                             
                              DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                              users.add(user);
                              userIDs.add(userTextArea.getText());
@@ -105,7 +111,11 @@ public class AdminControlPanel extends JFrame {
                          else {
                              DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                              if (selectedElement == root) {
+                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
+                                 long stop = System.currentTimeMillis();
+                                 creationTime = stop - start;
+                                 
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  users.add(user);
                                  userIDs.add(userTextArea.getText());
@@ -113,7 +123,11 @@ public class AdminControlPanel extends JFrame {
                                  root.add(userNode);
                              }
                              if (selectedElement.getUserObject() instanceof UserGroup) {
+                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
+                                 long stop = System.currentTimeMillis();
+                                 creationTime = stop - start;
+                                 
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  users.add(user);
                                  userIDs.add(userTextArea.getText());
@@ -121,7 +135,11 @@ public class AdminControlPanel extends JFrame {
                                  selectedElement.add(userNode);
                              }
                              if (selectedElement.getUserObject() instanceof User) {
+                                 long start = System.currentTimeMillis();
                                  User user = new User(userTextArea.getText());
+                                 long stop = System.currentTimeMillis();
+                                 creationTime = stop - start;
+                                 
                                  DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(user);
                                  DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedElement.getParent();
                                  users.add(user);
@@ -156,7 +174,11 @@ public class AdminControlPanel extends JFrame {
                 else {
                     if (!groupIDs.contains(groupTextArea.getText())) {
                         if (tree.getSelectionPath() == null) {
+                            long start = System.currentTimeMillis();
                             UserGroup group = new UserGroup(groupTextArea.getText());
+                            long stop = System.currentTimeMillis();
+                            creationTime = stop - start;
+                            
                             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                             groups.add(group);
                             groupIDs.add(groupTextArea.getText());
@@ -165,13 +187,21 @@ public class AdminControlPanel extends JFrame {
                         else {
                             DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                             if (selectedElement == root) {
-                            	UserGroup group = new UserGroup(groupTextArea.getText());
+                                long start = System.currentTimeMillis();
+                                UserGroup group = new UserGroup(groupTextArea.getText());
+                                long stop = System.currentTimeMillis();
+                                creationTime = stop - start;
+                                
                                 DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                                 groups.add(group);
                                 groupIDs.add(groupTextArea.getText());
                                 root.add(groupNode);
                             } else if (groupIDs.contains(selectedElement.getUserObject().toString())) {
-                            	UserGroup group = new UserGroup(groupTextArea.getText());
+                                long start = System.currentTimeMillis();
+                                UserGroup group = new UserGroup(groupTextArea.getText());
+                                long stop = System.currentTimeMillis();
+                                creationTime = stop - start;
+                                
                                 DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
                                 groups.add(group);
                                 groupIDs.add(groupTextArea.getText());

@@ -20,6 +20,9 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 public class UserView extends JFrame{
+	
+	private long lastUpdateTime = 0;
+	
 	private JTextArea tweetText;
 	private JPanel contentPane;
     private User user;
@@ -109,7 +112,11 @@ public class UserView extends JFrame{
 		            JOptionPane.showMessageDialog(null, "No blank tweets.", "Tweet Error", JOptionPane.INFORMATION_MESSAGE);
 		        } 
 				else {
+                    long start = System.currentTimeMillis();
 		            user.tweet(tweetText.getText());
+                    long stop = System.currentTimeMillis();
+                    lastUpdateTime = start - stop;
+                    user.setLastUpdateTime(lastUpdateTime);
 		            newsfeedModel.insertElementAt(user.getNewsFeed().get(0), 1);
 		            newsFeedList.setModel(newsfeedModel);
 		            

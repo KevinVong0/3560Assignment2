@@ -4,6 +4,8 @@ import java.util.List;
 
 public class User extends Subject implements Composite, Observer {
 
+	private long lastUpdateTime = 0;
+	
 	private String id;
 	private List<User> followers;
 	private List<String> following;
@@ -88,5 +90,13 @@ public class User extends Subject implements Composite, Observer {
 	@Override
 	public String toString() {
 		return id;
+	}
+	
+	public void setLastUpdateTime(long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+	
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
 	}
 }
